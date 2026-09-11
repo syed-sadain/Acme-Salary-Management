@@ -105,12 +105,28 @@ class PaginatedEmployees(BaseModel):
 # ---------- Analytics ----------
 
 class GroupAverage(BaseModel):
+    """Used for groupings where every member shares one currency (e.g. by country)."""
     group: str
     headcount: int
     avg_salary: float
     median_salary: float
     total_cost: float
-    currency: Optional[str] = None
+    currency: str
+
+
+class GroupPayIndex(BaseModel):
+    """
+    Used for groupings that span multiple countries/currencies (department, level).
+    Reporting a raw "average salary" across INR + USD + CAD in one number would be
+    silently wrong (see REQUIREMENTS.md: no FX conversion). Instead we report the
+    average *pay index* — each employee's salary divided by their own country's
+    entry-level base — which is comparable across currencies without conversion.
+    An avg_pay_index of 2.0 means "on average, double that country's entry pay".
+    """
+    group: str
+    headcount: int
+    avg_pay_index: float
+    median_pay_index: float
 
 
 class HistogramBucket(BaseModel):
@@ -123,9 +139,9 @@ class AnalyticsSummary(BaseModel):
     total_employees: int
     active_employees: int
     inactive_employees: int
-    by_department: List[GroupAverage]
+    by_department: List[GroupPayIndex]
     by_country: List[GroupAverage]
-    by_level: List[GroupAverage]
+    by_level: List[GroupPayIndex]
     # Distribution of each employee's salary expressed as a multiple of their own
     # country's L1 base salary (a "pay index"), NOT a currency conversion. This lets
     # us show one org-wide shape without pretending to convert INR/USD/EUR/etc. into

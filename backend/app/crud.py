@@ -207,12 +207,22 @@ def list_employees(
 # Analytics
 # ---------------------------------------------------------------------------
 
-def _group_stats(rows: List[Tuple[str, float, str]]) -> List[schemas.GroupAverage]:
-    """rows: list of (group_key, salary, currency) -> aggregated stats per group."""
+def _group_salary_stats(rows: List[Tuple[str, float, str]]) -> List[schemas.GroupAverage]:
+    """
+    rows: list of (group_key, salary, currency) -> aggregated stats per group.
+    ONLY valid when every row within a group shares one currency (e.g. grouping
+    by country). Raises if a group turns out to be multi-currency, so a future
+    caller can't silently misuse this on a mixed-currency grouping.
+    """
     buckets: dict[str, list] = {}
     currency_by_group: dict[str, str] = {}
     for group, salary, currency in rows:
         buckets.setdefault(group, []).append(salary)
+        if group in currency_by_group and currency_by_group[group] != currency:
+            raise ValueError(
+                f"Group '{group}' mixes currencies ({currency_by_group[group]} vs "
+                f"{currency}) — use _group_pay_index_stats instead."
+            )
         currency_by_group[group] = currency
 
     result = []
@@ -225,6 +235,29 @@ def _group_stats(rows: List[Tuple[str, float, str]]) -> List[schemas.GroupAverag
                 median_salary=round(statistics.median(values), 2),
                 total_cost=round(sum(values), 2),
                 currency=currency_by_group[group],
+            )
+        )
+    return result
+
+
+def _group_pay_index_stats(rows: List[Tuple[str, float]]) -> List[schemas.GroupPayIndex]:
+    """
+    rows: list of (group_key, pay_index) where pay_index is currency-independent
+    (salary / that employee's own country base pay). Safe to use for groupings
+    that span multiple countries, e.g. department or job level.
+    """
+    buckets: dict[str, list] = {}
+    for group, index in rows:
+        buckets.setdefault(group, []).append(index)
+
+    result = []
+    for group, values in sorted(buckets.items()):
+        result.append(
+            schemas.GroupPayIndex(
+                group=group,
+                headcount=len(values),
+                avg_pay_index=round(statistics.mean(values), 3),
+                median_pay_index=round(statistics.median(values), 3),
             )
         )
     return result
@@ -255,18 +288,22 @@ def get_analytics_summary(db: Session) -> schemas.AnalyticsSummary:
         .all()
     )
 
-    by_department = _group_stats([(r[0], r[3], r[4]) for r in current_rows])
-    by_country = _group_stats([(r[1], r[3], r[4]) for r in current_rows])
-    by_level = _group_stats([(r[2], r[3], r[4]) for r in current_rows])
+    # by_country groups share one currency per group -> real salary averages are valid.
+    by_country = _group_salary_stats([(r[1], r[3], r[4]) for r in current_rows])
 
-    # Pay index = salary / that country's L1 base salary (see schemas.py docstring).
-    pay_indexes = []
-    for _, country, _, salary, _ in current_rows:
+    # by_department / by_level span multiple countries/currencies -> must use the
+    # currency-independent pay index instead of averaging raw salary numbers.
+    def pay_index(country: str, salary: float) -> Optional[float]:
         base = COUNTRIES.get(country, (None, None))[1]
-        if base:
-            pay_indexes.append(salary / base)
+        return salary / base if base else None
 
-    histogram = _build_histogram(pay_indexes, num_buckets=10)
+    dept_rows = [(r[0], pay_index(r[1], r[3])) for r in current_rows if pay_index(r[1], r[3])]
+    level_rows = [(r[2], pay_index(r[1], r[3])) for r in current_rows if pay_index(r[1], r[3])]
+
+    by_department = _group_pay_index_stats(dept_rows)
+    by_level = _group_pay_index_stats(level_rows)
+
+    histogram = _build_histogram([idx for _, idx in dept_rows], num_buckets=10)
 
     return schemas.AnalyticsSummary(
         total_employees=total_employees,
