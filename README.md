@@ -8,6 +8,7 @@ answer org-wide "how do we pay people" questions from a dashboard.
 
 - **Requirements**: [`docs/REQUIREMENTS.md`](docs/REQUIREMENTS.md) — read this first
 - **Architecture**: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)
+- **Deployment**: [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md)
 - **AI usage notes**: [`docs/AI_USAGE.md`](docs/AI_USAGE.md)
 
 ## Stack
@@ -94,3 +95,11 @@ See the "Deliberately Out of Scope" section of
 FX conversion to one reporting currency, payroll/tax processing, bulk CSV
 import, org-chart visualization, and demographic pay-equity analysis were all
 excluded on purpose, not by oversight.
+----------------------------------------------------------------------------------------------------------
+# Rull all in command
+
+# Terminal 1
+cd acme-salary-mgmt/backend && source venv/bin/activate && uvicorn app.main:app --reload --port 8000
+
+# Terminal 2
+cd acme-salary-mgmt/frontend && npm run dev

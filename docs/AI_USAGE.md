@@ -33,11 +33,20 @@ places AI-assisted iteration changed the outcome.
 
 4. **Frontend design was planned as tokens before code**, per the working
    agreement to avoid generic "AI-generated dashboard" defaults (cream +
-   terracotta, dark + neon, uniform rounded SaaS cards). The direction chosen
-   — a compensation *ledger* aesthetic (serif display type, tabular numbers,
-   hairline dividers, one amber accent reserved for money figures) — was
-   picked because it's grounded in what the product actually is, not
-   because it's a safe default.
+   terracotta, dark + neon, uniform rounded SaaS cards). The first direction
+   sketched — a compensation *ledger* aesthetic (serif display type, tabular
+   numbers, hairline dividers, one amber accent reserved for money figures) —
+   was grounded in what the product actually is, not a safe default.
+
+   That direction was then **revised to a strictly monochrome system** (black /
+   white / grey) on review: a neutral palette reads as more credible for a
+   finance/HR *system of record*, and a single colored accent on money figures
+   was carrying meaning the UI didn't need. The theme now lives entirely in the
+   `@theme` custom properties in `frontend/src/index.css`, so the switch was a
+   token change plus a small set of component tweaks, not a rewrite. The one
+   place color is kept deliberately is **status semantics** — Active is green,
+   Inactive is red — because there the color *is* the information (the same
+   tokens also color the matching Analytics KPIs and form-error text).
 
 5. **Commits track the above as it happened**, not squashed into one
    "initial commit" at the end: requirements → backend core → backend tests
