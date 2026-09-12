@@ -254,6 +254,27 @@ The frontend will be available at:
 http://localhost:5173
 ```
 
+## Deploy It Live
+
+The frontend is Vercel-native; the backend needs a host with a writable disk
+(SQLite is a file). Full runbook in [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md).
+
+| Piece | Host | One-line why |
+|---|---|---|
+| Frontend (React SPA) | **Vercel** | Static build — Vercel's sweet spot |
+| Backend (FastAPI) | **Render** / **Railway** | Long-running process + persistent disk for SQLite |
+
+```text
+1. Backend  → Render "New → Blueprint" (reads render.yaml); note the URL
+2. Frontend → edit frontend/vercel.json, set the /api rewrite to that URL
+3. Vercel   → "Add New → Project", Root Directory = frontend, deploy
+```
+
+> **Why not the backend on Vercel?** Vercel functions run on an ephemeral,
+> read-only filesystem. A SQLite-backed server would lose its 10,000 seeded rows
+> on every cold start. Vercel hosts the frontend; the backend lives on a
+> container host where the file persists across restarts.
+
 ---
 
 ## 📁 Project Structure

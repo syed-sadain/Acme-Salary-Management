@@ -8,7 +8,14 @@ import type {
   SalaryRecord,
 } from "../types";
 
-const api = axios.create({ baseURL: "/api" });
+// Base URL for the API. Defaults to the relative "/api" path, which works in
+// local dev (Vite proxies it) and in Docker (nginx proxies it). When the
+// frontend is deployed separately from the backend (e.g. Vercel frontend +
+// Render/Railway backend), set VITE_API_BASE_URL to the backend's public URL
+// at build time. See docs/DEPLOYMENT.md.
+const api = axios.create({
+  baseURL: import.meta.env.VITE_API_BASE_URL || "/api",
+});
 
 export interface NewEmployeePayload {
   first_name: string;

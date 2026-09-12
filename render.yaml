@@ -1,0 +1,22 @@
+# Render Blueprint — deploys the FastAPI backend as a long-running web service.
+# SQLite lives on a persistent disk so the seeded data survives restarts
+# (Vercel's filesystem is ephemeral; Render disks are not).
+#
+# Usage: Render Dashboard → New → Blueprint → point at this repo.
+services:
+  - type: web
+    name: acme-salary-api
+    runtime: python
+    plan: free
+    rootDir: backend
+    buildCommand: "pip install -r requirements.txt && python seed.py --count 10000 --reset"
+    startCommand: "uvicorn app.main:app --host 0.0.0.0 --port $PORT"
+    envVars:
+      - key: DATABASE_URL
+        value: sqlite:////var/data/acme_salary.db
+      - key: PYTHON_VERSION
+        value: 3.12.0
+    disk:
+      name: acme-data
+      mountPath: /var/data
+      sizeGB: 1
