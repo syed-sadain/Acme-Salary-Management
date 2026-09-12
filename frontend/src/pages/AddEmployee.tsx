@@ -203,7 +203,7 @@ export default function AddEmployee() {
           <button
             type="submit"
             disabled={saving}
-            className="rounded bg-(--color-ink) px-5 py-2 text-sm font-medium text-white disabled:opacity-50 hover:bg-black transition-colors"
+            className="rounded-md bg-(--color-ink) px-5 py-2 text-sm font-medium text-white shadow-sm disabled:opacity-50 hover:bg-black transition-colors"
           >
             {saving ? "Adding…" : "Add employee"}
           </button>

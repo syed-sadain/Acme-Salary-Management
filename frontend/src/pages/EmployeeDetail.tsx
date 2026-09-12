@@ -46,7 +46,7 @@ export default function EmployeeDetail() {
 
       <div className="mt-4 flex items-start justify-between">
         <div className="flex items-center gap-4">
-          <div className="h-14 w-14 rounded-full bg-(--color-amber-soft) text-(--color-amber) flex items-center justify-center font-display text-xl">
+          <div className="h-14 w-14 rounded-full bg-(--color-ink) text-white flex items-center justify-center font-display text-xl">
             {initials(employee.first_name, employee.last_name)}
           </div>
           <div>
@@ -107,7 +107,7 @@ export default function EmployeeDetail() {
             </h2>
             <button
               onClick={() => setShowRaiseForm((v) => !v)}
-              className="rounded bg-(--color-ink) px-3 py-1.5 text-xs font-medium text-white hover:bg-black transition-colors"
+              className="rounded-md bg-(--color-ink) px-3 py-1.5 text-xs font-medium text-white shadow-sm hover:bg-black transition-colors"
             >
               {showRaiseForm ? "Cancel" : "Record a change"}
             </button>
@@ -179,7 +179,7 @@ function Fact({
       <dd
         className={`text-right tabular ${
           emphasize
-            ? "font-display text-lg text-(--color-amber)"
+            ? "font-display text-lg text-(--color-ink)"
             : "text-(--color-ink)"
         }`}
       >
@@ -282,7 +282,7 @@ function RaiseForm({
         <button
           type="submit"
           disabled={saving}
-          className="rounded bg-(--color-amber) px-4 py-1.5 text-sm font-medium text-white disabled:opacity-50 hover:brightness-95 transition-all"
+          className="rounded-md bg-(--color-ink) px-4 py-1.5 text-sm font-medium text-white shadow-sm disabled:opacity-50 hover:bg-black transition-colors"
         >
           {saving ? "Saving…" : "Save change"}
         </button>

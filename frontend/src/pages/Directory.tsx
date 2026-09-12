@@ -69,7 +69,7 @@ export default function Directory() {
           placeholder="Search by name, email, or employee ID"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="flex-1 min-w-[260px] rounded border border-(--color-line) bg-(--color-paper-raised) px-3 py-2 text-sm placeholder:text-(--color-ink-faint) focus:border-(--color-amber) focus:outline-none"
+          className="flex-1 min-w-[260px] rounded border border-(--color-line) bg-(--color-paper-raised) px-3 py-2 text-sm placeholder:text-(--color-ink-faint) focus:border-(--color-ink) focus:outline-none focus:ring-[3px] focus:ring-black/5"
         />
         <select
           value={department}
@@ -106,7 +106,7 @@ export default function Directory() {
         </select>
         <Link
           to="/employees/new"
-          className="ml-auto rounded bg-(--color-ink) px-4 py-2 text-sm font-medium text-white hover:bg-black transition-colors"
+          className="ml-auto rounded-md bg-(--color-ink) px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-black transition-colors"
         >
           Add employee
         </Link>

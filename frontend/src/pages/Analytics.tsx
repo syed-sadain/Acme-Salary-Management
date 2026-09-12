@@ -60,19 +60,19 @@ export default function Analytics() {
           </p>
           <ResponsiveContainer width="100%" height={280}>
             <BarChart data={deptChart} layout="vertical" margin={{ left: 24 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#E3E8EF" horizontal={false} />
-              <XAxis type="number" tick={{ fontSize: 12, fill: "#475467" }} />
+              <CartesianGrid strokeDasharray="3 3" stroke="#E2E2E2" horizontal={false} />
+              <XAxis type="number" tick={{ fontSize: 12, fill: "#525252" }} />
               <YAxis
                 type="category"
                 dataKey="name"
                 width={140}
-                tick={{ fontSize: 12, fill: "#475467" }}
+                tick={{ fontSize: 12, fill: "#525252" }}
               />
               <Tooltip
                 formatter={(v) => [`${Number(v).toFixed(2)}x`, "Avg pay index"]}
-                contentStyle={{ fontSize: 12, borderRadius: 4, borderColor: "#E3E8EF" }}
+                contentStyle={{ fontSize: 12, borderRadius: 4, borderColor: "#E2E2E2" }}
               />
-              <Bar dataKey="index" fill="#B8860B" radius={[0, 3, 3, 0]} />
+              <Bar dataKey="index" fill="#1F1F1F" radius={[0, 3, 3, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </Panel>
@@ -83,11 +83,11 @@ export default function Analytics() {
           </p>
           <ResponsiveContainer width="100%" height={280}>
             <BarChart data={histChart}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#E3E8EF" vertical={false} />
-              <XAxis dataKey="name" tick={{ fontSize: 11, fill: "#475467" }} />
-              <YAxis tick={{ fontSize: 12, fill: "#475467" }} />
-              <Tooltip contentStyle={{ fontSize: 12, borderRadius: 4, borderColor: "#E3E8EF" }} />
-              <Bar dataKey="count" fill="#101828" radius={[3, 3, 0, 0]} />
+              <CartesianGrid strokeDasharray="3 3" stroke="#E2E2E2" vertical={false} />
+              <XAxis dataKey="name" tick={{ fontSize: 11, fill: "#525252" }} />
+              <YAxis tick={{ fontSize: 12, fill: "#525252" }} />
+              <Tooltip contentStyle={{ fontSize: 12, borderRadius: 4, borderColor: "#E2E2E2" }} />
+              <Bar dataKey="count" fill="#1F1F1F" radius={[3, 3, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </Panel>
