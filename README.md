@@ -1,9 +1,8 @@
 # 💰 ACME Salary Management
 
-<p align="center">
+<h3 align="center">
   <strong>A modern, full-stack compensation management system built for ACME's global HR team.</strong>
-</p>
-
+</h3>
 <p align="center">
   Manage employee compensation, preserve complete salary history, and analyze organization-wide pay data — all from one centralized system.
 </p>
